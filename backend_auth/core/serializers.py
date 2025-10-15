@@ -1,44 +1,58 @@
+# core/serializers.py
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group 
-from django.db import transaction
+from django.contrib.auth.models import User, Group
+from .models import Producto, Categoria, Cliente, Pedido, Factura, Entrega, Pago, Incidente, Caja
 
-from .models import (
-    Producto, Cliente, Pedido, Factura, Entrega, Pago, Incidente, Caja
-)
+# ========================
+# 🔐 USUARIOS Y ROLES
+# ========================
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('id', 'name')
+        fields = ['id', 'name']
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
-    group_id = serializers.IntegerField(write_only=True)
-
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'group_id')
+        fields = ['id', 'username', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
-    
-    @transaction.atomic
+
     def create(self, validated_data):
-        group_id = validated_data.pop('group_id')
-        password = validated_data.pop('password')
-        
-        user = User.objects.create(**validated_data)
-        user.set_password(password)
+        user = User(
+            username=validated_data['username'],
+            email=validated_data.get('email', '')
+        )
+        user.set_password(validated_data['password'])
         user.save()
-        
-        try:
-            group = Group.objects.get(pk=group_id)
-            user.groups.add(group)
-        except Group.DoesNotExist:
-            raise serializers.ValidationError({"group_id": "El rol (ID) especificado no existe."})
-            
         return user
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    roles = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'roles']
+
+    def get_roles(self, obj):
+        return list(obj.groups.values_list('name', flat=True))
+
+
+# ========================
+# 📦 MODELOS
+# ========================
+
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categoria
+        fields = '__all__'
+
+
 class ProductoSerializer(serializers.ModelSerializer):
+    categoria_nombre = serializers.CharField(source='categoria.nombre_categoria', read_only=True)
+
     class Meta:
         model = Producto
         fields = '__all__'
@@ -60,7 +74,7 @@ class FacturaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Factura
         fields = '__all__'
-        
+
 
 class EntregaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,15 +86,6 @@ class PagoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pago
         fields = '__all__'
-        
-
-class CajaSerializer(serializers.ModelSerializer):
-    empleado = serializers.ReadOnlyField(source='empleado.username') 
-    
-    class Meta:
-        model = Caja
-        fields = '__all__'
-        read_only_fields = ('empleado',) 
 
 
 class IncidenteSerializer(serializers.ModelSerializer):
@@ -89,13 +94,7 @@ class IncidenteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-class UserInfoSerializer(serializers.ModelSerializer):
-    roles = serializers.SerializerMethodField()
-
+class CajaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'roles']
-
-    def get_roles(self, obj):
-        return list(obj.groups.values_list('name', flat=True))
+        model = Caja
+        fields = '__all__'

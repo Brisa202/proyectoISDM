@@ -21,14 +21,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+
     # Terceros (APIs)
     'rest_framework',
     'corsheaders', 
     'rest_framework_simplejwt', 
     
+    
     # Mis apps
     'core',
-    'backend_auth', 
+    'backend_auth',
+    'productos',
 ]
 
 MIDDLEWARE = [
@@ -66,7 +69,7 @@ WSGI_APPLICATION = 'backend_auth.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'alquileres_hollywood',
+        'NAME':'hollywood_alquileres2',
         'USER': 'root',
         'PASSWORD': 'brisa123456789',
         'HOST': 'localhost',
@@ -114,3 +117,7 @@ SIMPLE_JWT = {
     
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+

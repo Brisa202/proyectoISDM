@@ -1,0 +1,199 @@
+/* === PÁGINA GENERAL === */
+.empleados-page {
+  background-color: #0f0f0f;
+  min-height: 100vh;
+  padding: 40px;
+  color: #fff;
+}
+
+/* === HEADER === */
+.empleados-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #fddb3a;
+  padding-bottom: 10px;
+}
+
+.empleados-header h2 {
+  color: #fddb3a;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.empleados-header p {
+  color: #bbb;
+  font-size: 0.95rem;
+}
+
+.btn-agregar {
+  background-color: #fddb3a;
+  color: #000;
+  font-weight: 700;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(253, 219, 58, 0.3);
+}
+.btn-agregar:hover {
+  background-color: #e6c434;
+  transform: translateY(-2px);
+}
+
+/* === TABLA === */
+.empleados-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #141414;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.empleados-table th,
+.empleados-table td {
+  padding: 14px;
+  border-bottom: 1px solid #222;
+  text-align: left;
+}
+
+.empleados-table th {
+  background-color: #1d1d1d;
+  color: #fddb3a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.empleados-table td {
+  color: #ddd;
+}
+
+.empleados-table tr:hover {
+  background-color: #1a1a1a;
+}
+
+/* === ACCIONES === */
+.acciones {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.btn-icon:hover {
+  transform: scale(1.15);
+}
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.btn-icon.editar svg {
+  color: #4da3ff;
+}
+.btn-icon.eliminar svg {
+  color: #ff5c5c;
+}
+
+/* === FORMULARIO CREAR/EDITAR === */
+.empleado-form-container {
+  background-color: #141414;
+  color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  max-width: 700px;
+  margin: 50px auto;
+}
+
+.empleado-form-container h2 {
+  color: #fddb3a;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.empleado-form label {
+  display: block;
+  color: #ccc;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.empleado-form input,
+.empleado-form select {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #000; /* Texto negro */
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  appearance: none; /* Muestra flecha nativa correctamente */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto al enfocar */
+.empleado-form input:focus,
+.empleado-form select:focus {
+  border-color: #fddb3a; /* Dorado */
+  box-shadow: 0 0 5px rgba(253, 219, 58, 0.5);
+  outline: none;
+}
+
+.empleado-form input:focus,
+.empleado-form select:focus {
+  border-color: #fddb3a;
+  outline: none;
+}
+
+.btn-submit {
+  background-color: #fddb3a;
+  color: #000;
+  font-weight: 700;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-submit:hover {
+  background-color: #e6c434;
+  transform: translateY(-2px);
+}
+
+/* === ALERTAS === */
+.alert-box {
+  background-color: #141414;
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.alert-success {
+  border-color: #7cf77d;
+  color: #7cf77d;
+}
+.alert-error {
+  border-color: #ff7b7b;
+  color: #ff7b7b;
+}
+
+/* Flecha dorada personalizada */
+.empleado-form select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' fill='%23fddb3a' height='24' width='24'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}

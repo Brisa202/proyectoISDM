@@ -1,0 +1,94 @@
+/* === CONTENEDOR GENERAL === */
+.empleado-form-page {
+  background-color: #0f0f0f;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* === TARJETA === */
+.empleado-form-container {
+  background-color: #ffffff;
+  color: #000;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  padding: 40px 50px;
+  width: 100%;
+  max-width: 700px;
+}
+
+/* === TÍTULO === */
+.empleado-form-container h2 {
+  color: #000;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.empleado-form-container p.subtitle {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+}
+
+/* === FORMULARIO === */
+.empleado-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.empleado-form label {
+  font-weight: 600;
+  color: #333;
+}
+
+.empleado-form input,
+.empleado-form select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #333;
+  transition: border-color 0.2s ease;
+}
+
+.empleado-form input:focus,
+.empleado-form select:focus {
+  border-color: #fddb3a;
+  outline: none;
+}
+
+/* === BOTÓN === */
+.btn-submit {
+  background-color: #fddb3a;
+  color: #000;
+  font-weight: 700;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+  background-color: #e6c434;
+  transform: translateY(-2px);
+}
+
+/* === ALERTA EXITOSA (opcional) === */
+.alert-success {
+  background-color: #e6ffea;
+  border-left: 5px solid #4caf50;
+  padding: 12px 15px;
+  color: #256029;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}

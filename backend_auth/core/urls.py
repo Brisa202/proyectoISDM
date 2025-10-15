@@ -1,37 +1,32 @@
 # core/urls.py
-
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
 
+# 🔹 Importaciones de tus vistas
 from .views import (
+    LoginView,
     UserInfoView,
-    AdminUserCreateView, 
-    EmployeeUserCreateView,    
-    EmployeeViewSet,           
-    DashboardSummaryView,      
-    GroupViewSet, 
-    ProductoViewSet, 
-    ClienteViewSet, 
-    PedidoViewSet, 
-    FacturaViewSet, 
-    EntregaViewSet, 
-    PagoViewSet, 
-    IncidenteViewSet, 
-    CajaViewSet
+    AdminUserCreateView,
+    EmployeeUserCreateView,
+    EmployeeViewSet,
+    DashboardSummaryView,
+    GroupViewSet,
+    ProductoViewSet,
+    ClienteViewSet,
+    PedidoViewSet,
+    FacturaViewSet,
+    EntregaViewSet,
+    PagoViewSet,
+    IncidenteViewSet,
+    CajaViewSet,
+    CategoriaViewSet,
 )
 
-# 1. Configuración del Router
+# 🔹 Router principal (para todos tus modelos)
 router = DefaultRouter()
-
-# Rutas de Seguridad/Roles
 router.register(r'groups', GroupViewSet, basename='group')
-router.register(r'employees', EmployeeViewSet, basename='employee') # 👈 AGREGADA para gestión de empleados
-
-# Rutas de Negocio (CRUD)
+router.register(r'employees', EmployeeViewSet, basename='employee')
 router.register(r'productos', ProductoViewSet)
 router.register(r'clientes', ClienteViewSet)
 router.register(r'pedidos', PedidoViewSet)
@@ -40,21 +35,27 @@ router.register(r'entregas', EntregaViewSet)
 router.register(r'pagos', PagoViewSet)
 router.register(r'caja', CajaViewSet, basename='caja')
 router.register(r'incidentes', IncidenteViewSet)
+router.register(r'categorias', CategoriaViewSet)
 
 
+
+# 🔹 Rutas de tu API
 urlpatterns = [
-    # Rutas JWT Estándar
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # 🔐 Login personalizado (usado por React)
+    path('login/', LoginView.as_view(), name='custom-login'),
+
+    # 🔁 Refresh token JWT estándar
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
-    # Rutas de Creación de Usuarios
+
+    # 👤 Gestión de usuarios
     path('users/create/admin/', AdminUserCreateView.as_view(), name='admin-user-create'),
-    path('users/create/employee/', EmployeeUserCreateView.as_view(), name='employee-user-create'), # 👈 AGREGADA
-    
-    # Rutas de Información y Dashboard
+    path('users/create/employee/', EmployeeUserCreateView.as_view(), name='employee-user-create'),
     path('user/info/', UserInfoView.as_view(), name='user_info'),
-    path('dashboard/summary/', DashboardSummaryView.as_view(), name='dashboard-summary'), # 👈 AGREGADA (Tu nuevo dashboard)
-    
-    # Rutas del Router (CRUDs de Modelos)
+
+    # 📊 Dashboard (panel de control)
+    path('dashboard/summary/', DashboardSummaryView.as_view(), name='dashboard-summary'),
+
+    # 📦 CRUDs (automáticos desde router)
     path('', include(router.urls)),
 ]
+

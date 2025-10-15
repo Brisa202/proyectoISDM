@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../../styles/employeeForms.css";
+import Swal from "sweetalert2";
 
-const API_BASE_URL = "http://localhost:8000/api"; 
+const API_BASE_URL = "http://localhost:8000/api";
 
-function EmpleadoCreationForm() {
+function CreateEmployeeForm() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-     group_id: 3,
+    group_id: "",
   });
-  const [message, setMessage] = useState("");
+
+  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const getAuthHeaders = () => {
-    const token = localStorage.getItem("access_token"); // el que guardaste al login
+    const token = localStorage.getItem("access_token");
     if (!token) return {};
     return {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
   };
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const headers = getAuthHeaders();
+        const response = await axios.get(`${API_BASE_URL}/groups/`, { headers });
+        console.log("🎭 Roles cargados:", response.data);
+        setRoles(response.data);
+      } catch (error) {
+        console.error("❌ Error al cargar roles:", error);
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,7 +46,8 @@ function EmpleadoCreationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+
+    console.log("📤 Datos a enviar:", formData);
 
     try {
       const headers = getAuthHeaders();
@@ -39,12 +57,24 @@ function EmpleadoCreationForm() {
         { headers }
       );
 
+      console.log("✅ Empleado creado:", response.data);
+
       if (response.status === 201) {
-        setMessage(`✅ Empleado ${formData.username} creado con éxito`);
-        setFormData({ username: "", email: "", password: "" });
+        Swal.fire({
+          icon: "success",
+          title: "¡Empleado registrado exitosamente!",
+          confirmButtonColor: "#fddb3a",
+          background: "#141414",
+          color: "#fff",
+          confirmButtonText: "OK",
+        });
+
+        // Resetear formulario
+        setFormData({ username: "", email: "", password: "", group_id: "" });
+        e.target.reset();
       }
     } catch (error) {
-      console.error("Error al crear empleado:", error.response?.data);
+      console.error("❌ Error al crear empleado:", error.response?.data);
       let errorMsg = "Error desconocido";
 
       if (error.response?.data) {
@@ -52,33 +82,38 @@ function EmpleadoCreationForm() {
         if (errors.username) errorMsg = errors.username[0];
         else if (errors.email) errorMsg = errors.email[0];
         else if (errors.password) errorMsg = errors.password[0];
+        else if (errors.group_id) errorMsg = errors.group_id[0];
         else errorMsg = JSON.stringify(errors);
       }
-      setMessage("❌ " + errorMsg);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error al crear empleado",
+        text: errorMsg,
+        confirmButtonColor: "#fddb3a",
+        background: "#141414",
+        color: "#fff",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="empleado-creation-container">
-      <h2>Crear nuevo Empleado</h2>
-      <p className={message.includes("❌") ? "text-danger" : "text-success"}>
-        {message}
-      </p>
+    <div className="empleado-form-page">
+      <div className="empleado-form-container">
+        <h2>Crear nuevo Empleado</h2>
+        <p className="subtitle">Complete los datos para registrar un nuevo empleado.</p>
 
-      <form onSubmit={handleSubmit} className="form-group-spaced">
-        <div>
+        <form className="empleado-form" onSubmit={handleSubmit}>
           <label>Usuario:</label>
           <input
-            type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
+
           <label>Email:</label>
           <input
             type="email"
@@ -87,8 +122,7 @@ function EmpleadoCreationForm() {
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
+
           <label>Contraseña:</label>
           <input
             type="password"
@@ -97,64 +131,29 @@ function EmpleadoCreationForm() {
             onChange={handleChange}
             required
           />
-        </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creando..." : "Crear Empleado"}
-        </button>
-      </form>
+          <label>Rol:</label>
+          <select
+            name="group_id"
+            value={formData.group_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un rol</option>
+            {roles.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
+            ))}
+          </select>
 
-      <style jsx>{`
-        .empleado-creation-container {
-          max-width: 500px;
-          margin: 20px auto;
-          padding: 20px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-          background-color: #ffffff;
-        }
-        .form-group-spaced div {
-          margin-bottom: 15px;
-        }
-        label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: 600;
-        }
-        input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
-        .text-danger {
-          color: #d9534f;
-          font-weight: bold;
-        }
-        .text-success {
-          color: #5cb85c;
-          font-weight: bold;
-        }
-        button {
-          background-color: #fddb3a;
-          color: black;
-          padding: 10px 15px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          width: 100%;
-          font-weight: bold;
-        }
-        button:hover:not(:disabled) {
-          background-color: #e6c434;
-        }
-        button:disabled {
-          background-color: #ccc;
-          cursor: not-allowed;
-        }
-      `}</style>
+          <button type="submit" className="btn-submit" disabled={loading}>
+            {loading ? "Creando..." : "Crear Empleado"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
-export default EmpleadoCreationForm;
+export default CreateEmployeeForm;
